@@ -1,32 +1,108 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ShopFunny.VIP</title>
-  <style>
-    body {
-      background: #0b1020;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 60px 15px;
-    }
-    h1 { color: #70e1c1; }
-    a {
-      display: inline-block;
-      padding: 12px 20px;
-      background: #70e1c1;
-      color: #0b1020;
-      border-radius: 8px;
-      text-decoration: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShopFunny.VIP</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;background:#141c31;border-bottom:1px solid #29334b}
+.logo{font-size:25px;font-weight:900;color:#70e1c1}
+header p{color:#aeb7d0;font-size:13px}
+main{max-width:1000px;margin:auto;padding:22px}
+.hero{padding:28px 20px;background:linear-gradient(135deg,#183c46,#222148);border-radius:16px;margin-bottom:25px}
+.hero h1{font-size:30px;margin:0 0 10px}
+.hero p{color:#c6cce0;line-height:1.6}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
+button{cursor:pointer;border:0;border-radius:9px;padding:12px 15px;font-weight:bold}
+.tab{background:#202a40;color:#fff}
+.tab.active,.buy{background:#70e1c1;color:#07131b}
+h2{font-size:23px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{background:#141c31;border:1px solid #29334b;border-radius:13px;padding:15px;min-width:0}
+.pic{height:75px;display:grid;place-items:center;font-size:40px;background:#202a40;border-radius:9px}
+.card h3{font-size:16px;line-height:1.4}
+.desc{font-size:12px;color:#aeb7d0;line-height:1.5}
+.price{color:#70e1c1;font-size:20px;font-weight:bold;margin:15px 0}
+.buy{width:100%}
+.cart{margin-top:30px;background:#141c31;padding:18px;border-radius:13px}
+#cartList{color:#c6cce0;font-size:14px;line-height:1.8}
+.note{font-size:12px;color:#aeb7d0;line-height:1.7}
+footer{text-align:center;padding:28px;color:#7f8aa7;font-size:12px}
+@media(max-width:390px){main{padding:14px}.grid{gap:9px}.card{padding:10px}.hero h1{font-size:25px}}
+</style>
 </head>
 <body>
-  <h1>ShopFunny.VIP</h1>
-  <p>Shop tài khoản game và nạp điện thoại</p>
-  <a href="#san-pham">Xem sản phẩm</a>
-  <h2 id="san-pham">Sản phẩm đang cập nhật</h2>
+<header>
+  <div class="logo">ShopFunny.VIP</div>
+  <p>SHOP TÀI KHOẢN GAME • NẠP ĐIỆN THOẠI</p>
+</header>
+<main>
+  <section class="hero">
+    <h1>Mua sắm game, nhanh gọn!</h1>
+    <p>Chọn sản phẩm yêu thích và thêm vào giỏ hàng. Kiểm tra kỹ thông tin trước khi đặt mua.</p>
+    <button class="buy" onclick="document.getElementById('products').scrollIntoView()">Xem sản phẩm ↓</button>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" onclick="show('game',this)">🎮 Tài khoản game</button>
+    <button class="tab" onclick="show('phone',this)">📱 Nạp điện thoại</button>
+  </div>
+
+  <h2 id="heading">🎮 Tài khoản game</h2>
+  <section class="grid" id="products"></section>
+
+  <section class="cart">
+    <h2>🛒 Giỏ hàng (<span id="count">0</span>)</h2>
+    <div id="cartList">Chưa có sản phẩm.</div>
+    <h3>Tổng: <span id="total">0đ</span></h3>
+    <button class="buy" onclick="checkout()">Tiếp tục đặt hàng</button>
+    <p class="note">Đây là giỏ hàng demo trên trình duyệt. Đơn hàng chưa được gửi lên máy chủ và chưa có thanh toán thật.</p>
+  </section>
+</main>
+<footer>© ShopFunny.VIP · Liên hệ hỗ trợ sẽ được cập nhật</footer>
+
+<script>
+const products = [
+ {id:1,cat:'game',name:'Tài khoản Minecraft',desc:'Mẫu sản phẩm minh họa. Chỉ đăng bán tài khoản có quyền chuyển nhượng.',price:50000,icon:'⛏️'},
+ {id:2,cat:'game',name:'Tài khoản Roblox',desc:'Mẫu sản phẩm minh họa. Thông tin tài khoản sẽ cập nhật sau.',price:30000,icon:'🎮'},
+ {id:3,cat:'game',name:'Tài khoản game khác',desc:'Thay bằng tên game và mô tả sản phẩm thực tế của m.',price:40000,icon:'🕹️'},
+ {id:4,cat:'phone',name:'Nạp điện thoại 10.000đ',desc:'Chọn nhà mạng và số điện thoại ở bước triển khai backend.',price:10000,icon:'📱'},
+ {id:5,cat:'phone',name:'Nạp điện thoại 20.000đ',desc:'Mệnh giá minh họa — chưa thực hiện nạp tiền.',price:20000,icon:'📱'},
+ {id:6,cat:'phone',name:'Nạp điện thoại 50.000đ',desc:'Mệnh giá minh họa — chưa thực hiện nạp tiền.',price:50000,icon:'📱'},
+ {id:7,cat:'phone',name:'Nạp điện thoại 100.000đ',desc:'Mệnh giá minh họa — chưa thực hiện nạp tiền.',price:100000,icon:'📱'}
+];
+let category='game', cart={};
+const money=n=>n.toLocaleString('vi-VN')+'đ';
+function show(cat,btn){
+ category=cat;
+ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ document.getElementById('heading').textContent=cat==='game'?'🎮 Tài khoản game':'📱 Nạp điện thoại';
+ render();
+}
+function render(){
+ document.getElementById('products').innerHTML=products.filter(p=>p.cat===category).map(p=>`
+ <article class="card">
+ <div class="pic">${p.icon}</div>
+ <h3>${p.name}</h3><p class="desc">${p.desc}</p>
+ <div class="price">${money(p.price)}</div>
+ <button class="buy" onclick="add(${p.id})">+ Thêm vào giỏ</button>
+ </article>`).join('');
+ const items=products.filter(p=>cart[p.id]);
+ document.getElementById('count').textContent=items.reduce((s,p)=>s+cart[p.id],0);
+ document.getElementById('cartList').innerHTML=items.length?items.map(p=>`${p.name} × ${cart[p.id]} — ${money(p.price*cart[p.id])} <button onclick="removeItem(${p.id})">Bỏ</button>`).join('<br>'):'Chưa có sản phẩm.';
+ document.getElementById('total').textContent=money(items.reduce((s,p)=>s+p.price*cart[p.id],0));
+}
+function add(id){cart[id]=(cart[id]||0)+1;render()}
+function removeItem(id){delete cart[id];render()}
+function checkout(){
+ if(!Object.keys(cart).length){alert('M hãy chọn sản phẩm trước nhé!');return}
+ alert('Đây là bản demo. Chưa tạo đơn hàng thật, chưa nhận tiền và chưa thực hiện nạp điện thoại. Cần kết nối backend trước khi mở bán.');
+}
+render();
+</script>
 </body>
 </html>
